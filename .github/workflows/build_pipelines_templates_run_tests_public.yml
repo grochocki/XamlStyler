@@ -1,0 +1,31 @@
+name: Run Unit Tests
+
+on:
+  workflow_call:
+    inputs:
+      buildConfiguration:
+        required: true
+        type: string
+  
+jobs:
+  RunUnitTests:
+    name: Run Unit Tests
+    runs-on: windows-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+      
+    # The dotnet CLI does not accept glob patterns. Consider using a solution file to act on multiple projects at once.
+    - name: Build
+      run: dotnet build **/*UnitTests/*.csproj --configuration ${{ inputs.buildConfiguration }}
+      
+    # The dotnet CLI does not accept glob patterns. Consider using a solution file to act on multiple projects at once.
+    - name: Run Tests
+      run: dotnet test **/*UnitTests/*.csproj --logger trx --results-directory "${{ runner.temp }}" --configuration ${{ inputs.buildConfiguration }}
+      
+    - name: Run Tests
+      uses: NasAmin/trx-parser@v0.5.0
+      if: always()
+      with:
+        TRX_PATH: "${{ runner.temp }}"
+        REPO_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
