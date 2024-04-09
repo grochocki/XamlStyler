@@ -1,7 +1,15 @@
-# Environment variables defined in a calling workflow are not accessible to this reusable workflow. Refer to the documentation for further details on this limitation.
-name: build_pipelines_templates_build_extension_rider_public
+name: Build Rider Plugin
+
 on:
   workflow_call:
+    inputs:
+      buildConfiguration:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+
 jobs:
   BuildRiderExtension:
     name: Build Rider Plugin
@@ -12,25 +20,31 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+      
     - name: Install NuGet Tools
       uses: nuget/setup-nuget@v1.2.0
+      
     - name: NuGet Restore
       run: nuget restore src/XamlStyler.Rider.sln -Verbosity Detailed -NonInteractive
+      
     - name: Setup Java 16
       uses: actions/setup-java@v4.0.0
       with:
         distribution: zulu
         java-version: '16'
+        
     - name: Build
       run: "./${{ runner.workspace }}\\s\\src\\XamlStyler.Extension.Rider\\gradlew.bat buildPlugin -PPluginVersion=${{ env.pluginVersion }}"
       working-directory: "${{ runner.workspace }}\\s\\src\\XamlStyler.Extension.Rider"
       env:
         GRADLE_OPTS: "-Xmx3072m"
+        
     - name: Publish test results
       uses: EnricoMi/publish-unit-test-result-action@v2.12.0
       if: always()
       with:
         junit_files: "**/TEST-*.xml"
+        
     # The following script preserves the globbing behavior of the CopyFiles task.
     # Refer to this transformer's documentation for an alternative that will work in simple cases.
     - name: Copy Artifacts to Staging
@@ -59,6 +73,7 @@ jobs:
             await io.mkdirP(path.dirname(dest))
             await io.cp(file, dest, options)
           }
+          
     - name: Publish artifacts
       uses: actions/upload-artifact@v4.1.0
       with:
