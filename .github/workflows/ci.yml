@@ -26,15 +26,14 @@ jobs:
     needs: VersionString
     uses: "./.github/workflows/build_pipelines_templates_run_tests_public.yml"
     with:
-      buildConfiguration: release
-      version: ${{ needs.VersionString.outputs.version }}
+      buildConfiguration: ${{ needs.VersionString.outputs.buildConfiguration }}
   
   BuildExtension:
     name: Build VSIX
     needs: VersionString
     uses: "./.github/workflows/build_pipelines_templates_build_extension_public.yml"
     with:
-      buildConfiguration: release
+      buildConfiguration: ${{ needs.VersionString.outputs.buildConfiguration }}
       version: ${{ needs.VersionString.outputs.version }}
   
   BuildConsoleNuget:
@@ -42,7 +41,7 @@ jobs:
     needs: VersionString
     uses: "./.github/workflows/build_pipelines_templates_build_console_public.yml"
     with:
-      buildConfiguration: release
+      buildConfiguration: ${{ needs.VersionString.outputs.buildConfiguration }}
       version: ${{ needs.VersionString.outputs.version }}
   
   BuildRiderExtension:
@@ -50,5 +49,5 @@ jobs:
     needs: VersionString
     uses: "./.github/workflows/build_pipelines_templates_build_extension_rider_public.yml"
     with:
-      buildConfiguration: release
+      buildConfiguration: ${{ needs.VersionString.outputs.buildConfiguration }}
       version: ${{ needs.VersionString.outputs.version }}
