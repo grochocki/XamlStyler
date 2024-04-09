@@ -22,19 +22,6 @@ jobs:
         if: false
         run: echo
 
-  Variables2:
-    runs-on: ubuntu-latest
-    env:
-      buildConfiguration: ${{ env.env_buildConfiguration }}
-      major: ${{ env.env_major }}
-      patch: ${{ env.env_patch }}
-    steps:
-      - uses: "./.github/workflows/build_pipelines_templates_build_extension_public.yml"
-        with:
-          buildConfiguration: ${{ env.buildConfiguration }}
-          major: ${{ env.major }}
-          patch: ${{ env.patch }}
-
   RunUnitTests:
     name: Run Unit Tests
     uses: "./.github/workflows/build_pipelines_templates_run_tests_public.yml"
