@@ -6,10 +6,7 @@ on:
       buildConfiguration:
         required: true
         type: string
-      major:
-        required: true
-        type: string
-      patch:
+      version:
         required: true
         type: string
         
@@ -21,14 +18,9 @@ jobs:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/checkout@v4.1.0
-    
-    - name: Get minor version number value
-      run: |
-        $NOW=& Get-Date -format "yyMM"
-        echo "minor=$NOW" >> $env:GITHUB_ENV
-        
+
     - name: Update Version Number
-      run: 'build\update-version.ps1 ${{ inputs.major }}.${{ env.minor }}.${{ inputs.patch }}'
+      run: 'build\update-version.ps1 ${{ inputs.version }}'
       shell: pwsh
       
     - name: Install NuGet Tools
