@@ -1,7 +1,19 @@
 # Environment variables defined in a calling workflow are not accessible to this reusable workflow. Refer to the documentation for further details on this limitation.
 name: build_pipelines_templates_build_extension_public
+
 on:
   workflow_call:
+    inputs:
+      buildConfiguration:
+        required: true
+        type: string
+      major:
+        required: true
+        type: string
+      patch:
+        required: true
+        type: string
+        
 jobs:
   BuildExtension:
     name: Build VSIX
