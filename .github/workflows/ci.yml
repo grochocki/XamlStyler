@@ -11,23 +11,6 @@ env:
   env_patch: "$[counter(format('{0:yyMM}', pipeline.startTime), 0)]"
 
 jobs:
-  print:
-    runs-on: ubuntu-latest
-    outputs:
-      buildConfiguration: ${{ steps.step1.outputs.buildConfiguration }}
-      major: ${{ steps.step1.outputs.major }}
-      patch: ${{ steps.step1.outputs.patch }}
-    steps:
-      - name: Print inputs passed to the reusable workflow
-        id: step1
-        run: |
-          echo "buildConfiguration: $env_buildConfiguration"
-          echo "::set-output name=buildConfiguration::$env_buildConfiguration"
-          echo "major: $env_major"
-          echo "::set-output name=major::$env_major"
-          echo "patch: $env_patch"
-          echo "::set-output name=patch::$env_patch"
-
   RunUnitTests:
     name: Run Unit Tests
     uses: "./.github/workflows/build_pipelines_templates_run_tests_public.yml"
