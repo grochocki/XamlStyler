@@ -15,7 +15,7 @@ jobs:
         $NOW=& Get-Date -format "yyMM"
         echo "minor=$NOW" >> $env:GITHUB_ENV
     - name: Update Version Number
-      run: ' ${{ env.major }}.${{ env.minor }}.${{ env.patch }}'
+      run: 'build\update-version.ps1 ${{ env.major }}.${{ env.minor }}.${{ env.patch }}'
       shell: pwsh
     - name: Install NuGet Tools
       uses: nuget/setup-nuget@v1.2.0
