@@ -10,8 +10,12 @@ jobs:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/checkout@v4.1.0
+    - name: Get minor version number value
+      run: |
+        $NOW=& Get-Date -format yyyy-mm-dd
+        echo "minor=$NOW" >> $env:GITHUB_ENV
     - name: Update Version Number
-      run: ' ${{ env.major }}.$(Get-Date -Format "yyMM").${{ env.patch }}'
+      run: ' ${{ env.major }}.${{ env.minor }}.${{ env.patch }}'
       shell: pwsh
     - name: Install NuGet Tools
       uses: nuget/setup-nuget@v1.2.0
