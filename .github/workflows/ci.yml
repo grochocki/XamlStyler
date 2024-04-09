@@ -12,16 +12,15 @@ env:
 
 jobs:
   VersionString:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     outputs:
       buildConfiguration: ${{ env.env_buildConfiguration }}
-      version: ${{ env.env_major }}.${{ steps.minorStep.outputs.minor }}.${{ env.env_patch }}
+      version: ${{ env.env_major }}.${{ env.env_minor }}.${{ env.env_patch }}
     steps:
       - name: Get minor version number value
-        id: minorStep
         run: |
           $NOW=& Get-Date -format "yyMM"
-          echo "minor=$NOW" >> $GITHUB_OUTPUT
+          echo "env_minor=$NOW" >> $env:GITHUB_ENV
 
   RunUnitTests:
     name: Run Unit Tests
