@@ -14,7 +14,7 @@ jobs:
     runs-on: windows-latest
     outputs:
       buildConfiguration: ${{ env.env_buildConfiguration }}
-      version: ${{ env.env_major }}.${{ env.env_minor }}.${{ GITHUB_RUN_NUMBER }}
+      version: ${{ env.env_major }}.${{ env.env_minor }}.${{ github.run_number }}
     steps:
       - name: Get minor version number value
         run: |
