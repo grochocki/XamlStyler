@@ -30,13 +30,7 @@ jobs:
 
   RunUnitTests:
     name: Run Unit Tests
-    needs:
-      - print
     uses: "./.github/workflows/build_pipelines_templates_run_tests_public.yml"
-    with:
-      buildConfiguration: ${{ needs.print.outputs.buildConfiguration }}
-      major: ${{ needs.print.outputs.major }}
-      patch: ${{ needs.print.outputs.patch }}
   
   BuildExtension:
     name: Build VSIX
@@ -50,20 +44,8 @@ jobs:
   
   BuildConsoleNuget:
     name: Build NuGet Package
-    needs:
-      - print
     uses: "./.github/workflows/build_pipelines_templates_build_console_public.yml"
-    with:
-      buildConfiguration: ${{ needs.print.outputs.buildConfiguration }}
-      major: ${{ needs.print.outputs.major }}
-      patch: ${{ needs.print.outputs.patch }}
   
   BuildRiderExtension:
     name: Build Rider Plugin
-    needs:
-      - print
     uses: "./.github/workflows/build_pipelines_templates_build_extension_rider_public.yml"
-    with:
-      buildConfiguration: ${{ needs.print.outputs.buildConfiguration }}
-      major: ${{ needs.print.outputs.major }}
-      patch: ${{ needs.print.outputs.patch }}
