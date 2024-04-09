@@ -1,7 +1,15 @@
-# Environment variables defined in a calling workflow are not accessible to this reusable workflow. Refer to the documentation for further details on this limitation.
-name: build_pipelines_templates_build_console_public
+name: Build NuGet Package
+
 on:
   workflow_call:
+    inputs:
+      buildConfiguration:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+
 jobs:
   BuildConsoleNuget:
     name: Build NuGet Package
@@ -9,22 +17,23 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Get minor version number value
-      run: |
-        $NOW=& Get-Date -format yyyy-mm-dd
-        echo "minor=$NOW" >> $env:GITHUB_ENV
+        
     - name: Update Version Number
-      run: ' ${{ env.major }}.$({ env.minor }).${{ env.patch }}'
+      run: '.\build\update-version.ps1 ${{ inputs.version }}'
       shell: pwsh
+      
     - name: Use .NET 6 SDK
       uses: actions/setup-dotnet@v4.0.0
       with:
         dotnet-version: 6.0.x
+        
     - name: Build
-      run: dotnet build src/XamlStyler.Console/XamlStyler.Console.csproj --configuration ${{ env.buildConfiguration }}
+      run: dotnet build src/XamlStyler.Console/XamlStyler.Console.csproj --configuration ${{ inputs.buildConfiguration }}
     # The dotnet CLI does not accept glob patterns. Consider using a solution file to act on multiple projects at once.
+    
     - name: Pack
       run: dotnet pack **/XamlStyler.Console.csproj --no-build
+      
     - name: Publish NuGet Package Artifact
       uses: actions/upload-artifact@v4.1.0
       with:
