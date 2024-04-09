@@ -11,19 +11,16 @@ env:
   env_patch: "$[counter(format('{0:yyMM}', pipeline.startTime), 0)]"
 
 jobs:
-  PrintVersion:
+  Variables:
     runs-on: ubuntu-latest
     outputs:
-      buildConfiguration: ${{ steps.step1.outputs.buildConfiguration }}
-      major: ${{ steps.step1.outputs.major }}
-      patch: ${{ steps.step1.outputs.patch }}
+      buildConfiguration: ${{ env.env_buildConfiguration }}
+      major: ${{ env.env_major }}
+      patch: ${{ env.env_patch }}
     steps:
-      - name: Print inputs passed to the reusable workflow
-        id: step1
-        run: |
-          echo "buildConfiguration=$buildConfiguration" >> $GITHUB_OUTPUT
-          echo "major=$env_major" >> $GITHUB_OUTPUT
-          echo "patch=$env_patch" >> $GITHUB_OUTPUT
+      - name: Echo
+        if: false
+        run: echo
           
   RunUnitTests:
     name: Run Unit Tests
@@ -32,12 +29,12 @@ jobs:
   BuildExtension:
     name: Build VSIX
     needs:
-      - PrintVersion
+      - Variables
     uses: "./.github/workflows/build_pipelines_templates_build_extension_public.yml"
     with:
-      buildConfiguration: ${{ needs.print.outputs.buildConfiguration }}
-      major: ${{ needs.print.outputs.major }}
-      patch: ${{ needs.print.outputs.patch }}
+      buildConfiguration: ${{ needs.Variables.outputs.buildConfiguration }}
+      major: ${{ needs.Variables.outputs.major }}
+      patch: ${{ needs.Variables.outputs.patch }}
   
   BuildConsoleNuget:
     name: Build NuGet Package
