@@ -9,8 +9,12 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+    - name: Get minor version number value
+      run: |
+        $MINOR=& Get-Date -format yyMM
+        echo "minor=$MINOR" >> $env:GITHUB_ENV
     - name: Update Version Number
-      run: ' ${{ env.major }}.$(Get-Date -Format "yyMM").${{ env.patch }}'
+      run: ' ${{ env.major }}.$({ env.minor }).${{ env.patch }}'
       shell: pwsh
     - name: Use .NET 6 SDK
       uses: actions/setup-dotnet@v4.0.0
