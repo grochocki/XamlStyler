@@ -8,14 +8,13 @@ on:
 env:
   env_buildConfiguration: Release
   env_major: 0
-  env_patch: ${ GITHUB_RUN_NUMBER }
 
 jobs:
   VersionString:
     runs-on: windows-latest
     outputs:
       buildConfiguration: ${{ env.env_buildConfiguration }}
-      version: ${{ env.env_major }}.${{ env.env_minor }}.${{ env.env_patch }}
+      version: ${{ env.env_major }}.${{ env.env_minor }}.${{ GITHUB_RUN_NUMBER }}
     steps:
       - name: Get minor version number value
         run: |
