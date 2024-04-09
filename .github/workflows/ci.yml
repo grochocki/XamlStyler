@@ -21,12 +21,9 @@ jobs:
       - name: Print inputs passed to the reusable workflow
         id: step1
         run: |
-          echo "buildConfiguration: $env_buildConfiguration"
-          echo "::set-output name=buildConfiguration::$env_buildConfiguration"
-          echo "major: $env_major"
-          echo "::set-output name=major::$env_major"
-          echo "patch: $env_patch"
-          echo "::set-output name=patch::$env_patch"
+          echo "buildConfiguration=$buildConfiguration" >> $GITHUB_OUTPUT
+          echo "major=$env_major" >> $GITHUB_OUTPUT
+          echo "patch=$env_patch" >> $GITHUB_OUTPUT
           
   RunUnitTests:
     name: Run Unit Tests
