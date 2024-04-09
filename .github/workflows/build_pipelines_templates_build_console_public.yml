@@ -1,0 +1,28 @@
+# Environment variables defined in a calling workflow are not accessible to this reusable workflow. Refer to the documentation for further details on this limitation.
+name: build_pipelines_templates_build_console_public
+on:
+  workflow_call:
+jobs:
+  BuildConsoleNuget:
+    name: Build NuGet Package
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Update Version Number
+      run: ' ${{ env.major }}.$(Get-Date -Format "yyMM").${{ env.patch }}'
+      shell: pwsh
+    - name: Use .NET 6 SDK
+      uses: actions/setup-dotnet@v4.0.0
+      with:
+        dotnet-version: 6.0.x
+    - name: Build
+      run: dotnet build src/XamlStyler.Console/XamlStyler.Console.csproj --configuration ${{ env.buildConfiguration }}
+    # The dotnet CLI does not accept glob patterns. Consider using a solution file to act on multiple projects at once.
+    - name: Pack
+      run: dotnet pack **/XamlStyler.Console.csproj --no-build
+    - name: Publish NuGet Package Artifact
+      uses: actions/upload-artifact@v4.1.0
+      with:
+        name: XamlStyler.Console
+        path: "${{ runner.temp }}"
