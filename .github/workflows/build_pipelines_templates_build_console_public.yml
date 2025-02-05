@@ -1,0 +1,41 @@
+name: Build NuGet Package
+
+on:
+  workflow_call:
+    inputs:
+      buildConfiguration:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+
+jobs:
+  BuildConsoleNuget:
+    name: Build NuGet Package
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+        
+    - name: Update Version Number
+      run: '.\build\update-version.ps1 ${{ inputs.version }}'
+      shell: pwsh
+      
+    - name: Use .NET 6 SDK
+      uses: actions/setup-dotnet@v4.0.0
+      with:
+        dotnet-version: 6.0.x
+        
+    - name: Build
+      run: dotnet build src/XamlStyler.Console/XamlStyler.Console.csproj --configuration ${{ inputs.buildConfiguration }}
+    # The dotnet CLI does not accept glob patterns. Consider using a solution file to act on multiple projects at once.
+    
+    - name: Pack
+      run: dotnet pack **/XamlStyler.Console.csproj --no-build
+      
+    - name: Publish NuGet Package Artifact
+      uses: actions/upload-artifact@v4.1.0
+      with:
+        name: XamlStyler.Console
+        path: "${{ runner.temp }}"
